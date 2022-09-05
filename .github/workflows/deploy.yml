@@ -1,0 +1,25 @@
+name: Deploy to S3
+
+on: [push]
+
+jobs:
+  deploy_to_s3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-external-id: ${{ secrets.AWS_EXTERNAL_ID }}
+          role-duration-seconds: 1200
+          role-session-name: AssetsUploadSession
+
+      - name: Copy files to the test website with the AWS CLI
+        run: |
+          aws s3 sync ./src/ s3://ftf-main
