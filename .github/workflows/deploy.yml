@@ -22,6 +22,6 @@ jobs:
           role-duration-seconds: 1200
           role-session-name: AssetsUploadSession
 
-      - name: Copy files to the test website with the AWS CLI
+      - name: Copy files to s3
         run: |
           aws s3 sync ./src/ s3://ftf-main
